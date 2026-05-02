@@ -1,9 +1,9 @@
 {
   "id": "pomovault",
   "name": "PomoVault",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "1.5.0",
-  "description": "Pomodoro execution for Obsidian. Tasks, timer, and proof-of-work logs in plain markdown.",
+  "description": "Pomodoro timer, task list, and proof-of-work session logs in plain markdown.",
   "author": "Eric Grill",
   "authorUrl": "https://www.ericgrill.com",
   "isDesktopOnly": false

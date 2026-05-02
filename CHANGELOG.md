@@ -4,6 +4,12 @@ All notable changes to PomoVault are documented here.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versioning tracks [Semantic Versioning](https://semver.org/spec/v2.0.0.html) via `manifest.json`.
 
+## [0.1.1] - 2026-05-02
+
+### Changed
+
+- Short plugin description updated for community directory guidelines (no redundant product name in the manifest tagline).
+
 ## [0.1.0] - 2026-05-02
 
 ### Added

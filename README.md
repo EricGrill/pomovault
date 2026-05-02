@@ -2,7 +2,7 @@
 
 > Pomodoro execution for [Obsidian](https://obsidian.md). Tasks, timer, and proof-of-work logs in plain markdown.
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/ericgrill/pomovault/releases)
+[![Version](https://img.shields.io/badge/version-0.1.1-blue)](https://github.com/ericgrill/pomovault/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Obsidian](https://img.shields.io/badge/Obsidian-1.5.0+-8A2BE2)](https://obsidian.md)
 

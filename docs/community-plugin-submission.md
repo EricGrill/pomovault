@@ -43,7 +43,7 @@ Add a comma after the previous entry’s `}`, then append:
   "id": "pomovault",
   "name": "PomoVault",
   "author": "Eric Grill",
-  "description": "Pomodoro execution for Obsidian. Tasks, timer, and proof-of-work logs in plain markdown.",
+  "description": "Pomodoro timer, task list, and proof-of-work session logs in plain markdown.",
   "repo": "EricGrill/pomovault"
 }
 ```
