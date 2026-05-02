@@ -1,5 +1,9 @@
 # PomoVault Release Checklist
 
+## Manual QA matrix (pre-launch)
+
+Before a public launch, walk through the structured checklist in [qa-matrix.md](./qa-matrix.md). Check boxes there only for scenarios you actually ran; use it as a living record per release.
+
 ## Local Verification
 
 - Run `npm run verify`.

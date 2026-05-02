@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: PomoVault Discussions
+    url: https://github.com/ericgrill/pomovault/discussions
+    about: Ask questions, share workflows, or discuss ideas before opening an issue.
+  - name: Obsidian forum
+    url: https://forum.obsidian.md/
+    about: General Obsidian help and community support.

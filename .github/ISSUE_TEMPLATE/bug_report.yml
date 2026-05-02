@@ -1,0 +1,70 @@
+name: Bug report
+description: Report a problem or unexpected behavior
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. The details below help us reproduce the issue quickly.
+  - type: input
+    id: obsidian_version
+    attributes:
+      label: Obsidian version
+      description: From **Settings → About**.
+      placeholder: e.g. 1.8.7
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: e.g. macOS 15.5, Windows 11, Android 15
+    validations:
+      required: true
+  - type: input
+    id: pomovault_version
+    attributes:
+      label: PomoVault version
+      description: From **Settings → Community plugins → PomoVault**, or the version in the plugin folder / release you installed.
+      placeholder: e.g. 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: theme
+    attributes:
+      label: Theme
+      description: Built-in or community theme (if it might affect UI).
+      placeholder: e.g. Default, Minimal
+    validations:
+      required: false
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Minimal numbered steps so we can see the same behavior.
+      placeholder: |
+        1. …
+        2. …
+        3. …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots_logs
+    attributes:
+      label: Screenshots / logs (optional)
+      description: Attach images or paste output from **Developer tools** (Ctrl/Cmd+Shift+I) if useful.
+    validations:
+      required: false
