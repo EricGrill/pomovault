@@ -107,12 +107,23 @@ On install: plugin creates `PomoVault.md`, opens it, prompts user to select or c
 - [ ] Recurring complete: marks done, appends next occurrence with updated dates
 - [ ] Add task: appends new formatted task line to source file
 
+#### Markdown Session Log
+- [ ] Creates `PomoVault Log.md` by default
+- [ ] Appends minimal work-session ledger entries in plain markdown
+- [ ] Captures start time, end time, session type, duration, outcome, and active task text
+- [ ] Logs work sessions by default; break logging is optional and off by default
+
+#### Website
+- [ ] Static React/Tailwind site built with Vite
+- [ ] Deployed to GitHub Pages at `pomovault.com`
+- [ ] Links to GitHub repo, install docs, task syntax, logging docs, and release notes
+- [ ] Uses terse proof-of-work product voice aligned with ericgrill.com
+
 ---
 
 ### 4.2 Should Have (v1.1)
 
 - [ ] **Keyboard shortcut** to open PomoVault.md from anywhere in vault
-- [ ] **Session log** — optional daily note append: "Completed 4 pomodoros on [date]"
 - [ ] **In-progress status** — `[/]` marker for tasks started but not finished
 - [ ] **Task notes** — expand a task row to add/view inline notes
 - [ ] **Mobile layout** — responsive adjustments for Obsidian mobile

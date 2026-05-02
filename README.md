@@ -14,9 +14,18 @@ This repository contains the v1 plugin implementation, static product site, and 
 npm install
 npm test
 npm run build
+npm run verify
 ```
 
 The website lives in `site/` and deploys as a static GitHub Pages site for `pomovault.com`.
+
+## Website
+
+```bash
+npm --prefix site install
+npm --prefix site run build
+npm --prefix site run preview
+```
 
 ## Task Syntax
 
