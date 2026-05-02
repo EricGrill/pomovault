@@ -3,6 +3,7 @@
 # Local agent/runtime state
 .omx/
 .superpowers/
+.worktrees/
 
 # JavaScript/TypeScript
 node_modules/
