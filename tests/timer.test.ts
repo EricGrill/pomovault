@@ -41,6 +41,15 @@ describe("PomoTimer", () => {
     expect(timer.state.completedWorkSessions).toBe(1);
   });
 
+  it("clears active task state when advancing into a break", () => {
+    const timer = new PomoTimer(durations, createInitialTimerState(durations));
+    timer.start(0, "task-1", "Draft proposal");
+    timer.tick(25 * 60 * 1000);
+
+    expect(timer.state.activeTaskId).toBeNull();
+    expect(timer.state.activeTaskText).toBeNull();
+  });
+
   it("uses long break after the configured number of work sessions", () => {
     const timer = new PomoTimer({
       ...durations,
