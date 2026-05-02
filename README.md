@@ -2,7 +2,7 @@
 
 > Pomodoro execution for [Obsidian](https://obsidian.md). Tasks, timer, and proof-of-work logs in plain markdown.
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/egrill/pomovault/releases)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue)](https://github.com/ericgrill/pomovault/releases)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Obsidian](https://img.shields.io/badge/Obsidian-1.5.0+-8A2BE2)](https://obsidian.md)
 
@@ -21,18 +21,21 @@ PomoVault is an Obsidian plugin that eliminates the friction between task manage
 - ✅ **One-click completion** — Mark tasks done inline; updates your source file instantly
 - 📝 **Plain markdown logs** — Session history written to `PomoVault Log.md` — no lock-in, ever
 - 🔗 **Wikilink support** — `[[Internal Links]]` in tasks render and work normally
-- 🔁 **Recurring tasks** — Handles repeating tasks with automatic next-occurrence creation
+- 🔁 **Recurring task markers** — Displays repeating-task metadata; automatic next-occurrence creation is planned for a later release
 - 🔇 **Zero dependencies** — No Tasks plugin, no Dataview, no other timer plugin required
-- 📱 **Mobile ready** — Works on Obsidian desktop and mobile
+- 📱 **Not desktop-only** — Built with responsive Obsidian UI primitives; validate your theme on mobile before relying on it daily
 
 ---
 
 ## 🚀 Quick Start
 
-1. Install PomoVault from the Obsidian Community Plugins browser
-2. Enable the plugin — it creates `PomoVault.md` automatically
-3. Select your task source file when prompted
-4. Open `PomoVault.md` and click **▶️ Start** on your top task
+Until PomoVault is accepted into the Obsidian Community Plugins directory:
+
+1. Download or build `main.js`, `manifest.json`, and `styles.css`
+2. Copy them into `.obsidian/plugins/pomovault/` in a test vault
+3. Enable PomoVault in Obsidian Community Plugins settings
+4. Select your task source file when prompted
+5. Open `PomoVault.md` and click **▶️ Start** on your top task
 
 ---
 
@@ -130,7 +133,7 @@ npm --prefix site run build
 npm --prefix site run preview
 ```
 
-The website is a static Vite/React/Tailwind app deployed to [pomovault.com](https://pomovault.com) via GitHub Pages.
+The website is a static Vite/React/Tailwind app intended for [pomovault.com](https://pomovault.com) via GitHub Pages.
 
 ---
 

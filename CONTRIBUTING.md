@@ -27,7 +27,7 @@ Thank you for your interest in contributing! This document covers everything you
 
 ```bash
 # Clone the repository
-git clone https://github.com/egrill/pomovault.git
+git clone https://github.com/ericgrill/pomovault.git
 cd pomovault
 
 # Install dependencies
@@ -66,7 +66,8 @@ pomovault/
 ├── src/                    # Plugin source code (TypeScript)
 │   ├── main.ts            # Plugin lifecycle, pomoblock processor registration
 │   ├── renderer.ts        # UI rendering — timer, task list, NOW WORKING ON
-│   ├── task-parser.ts     # Markdown task read/write operations
+│   ├── task-parser.ts     # Markdown task parsing and formatting
+│   ├── task-writer.ts     # Safe task source updates
 │   ├── timer.ts           # Pomodoro timer engine
 │   ├── task-modal.ts      # Add-task modal UI
 │   ├── setup-modal.ts     # First-run setup modal
