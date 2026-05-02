@@ -4,12 +4,14 @@
 .omx/
 .superpowers/
 .worktrees/
+.test-vault/
 
 # JavaScript/TypeScript
 node_modules/
 dist/
 build/
 coverage/
+main.js
 
 # Obsidian plugin build output
 /plugin/*.js

@@ -1,0 +1,103 @@
+.pomovault {
+  --pv-accent: var(--interactive-accent);
+  --pv-danger: var(--text-error);
+  --pv-muted: var(--text-muted);
+  --pv-border: var(--background-modifier-border);
+  --pv-surface: var(--background-secondary);
+  display: grid;
+  gap: 1rem;
+}
+
+.pomovault__panel {
+  border: 1px solid var(--pv-border);
+  border-radius: 8px;
+  background: var(--pv-surface);
+  padding: 1rem;
+}
+
+.pomovault__timer-panel {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pomovault__mode {
+  color: var(--pv-muted);
+  font-size: var(--font-ui-small);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.pomovault__timer {
+  font-family: var(--font-monospace);
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.pomovault__timer--danger {
+  color: var(--pv-danger);
+}
+
+.pomovault__controls,
+.pomovault__task-header,
+.pomovault__task {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pomovault__task-header {
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.pomovault__tasks {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.pomovault__task {
+  border-top: 1px solid var(--pv-border);
+  padding-top: 0.5rem;
+}
+
+.pomovault__task-text {
+  flex: 1 1 16rem;
+}
+
+.pomovault__priority,
+.pomovault__date,
+.pomovault__recurring {
+  border: 1px solid var(--pv-border);
+  border-radius: 999px;
+  color: var(--pv-muted);
+  font-size: var(--font-ui-smaller);
+  padding: 0.1rem 0.45rem;
+}
+
+.pomovault__priority--urgent,
+.pomovault__date--due {
+  border-color: var(--pv-danger);
+  color: var(--pv-danger);
+}
+
+.pomovault__priority--highest {
+  border-color: var(--color-orange);
+  color: var(--color-orange);
+}
+
+.pomovault__priority--high {
+  border-color: var(--color-yellow);
+  color: var(--color-yellow);
+}
+
+.pomovault__priority--normal,
+.pomovault__priority--low,
+.pomovault__priority--lowest {
+  opacity: 0.85;
+}
+
+.pomovault button {
+  cursor: pointer;
+}

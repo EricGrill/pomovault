@@ -1,0 +1,28 @@
+name: Build plugin release assets
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: mkdir -p dist/plugin && cp main.js manifest.json styles.css dist/plugin/
+      - uses: actions/upload-artifact@v5
+        with:
+          name: pomovault-plugin
+          path: dist/plugin
