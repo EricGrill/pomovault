@@ -27,4 +27,16 @@ describe("settings", () => {
     expect(normalized.sessionsBeforeLongBreak).toBe(4);
     expect(normalized.taskSourcePath).toBe("");
   });
+
+  it("normalizes note paths to markdown files outside hidden folders", () => {
+    const normalized = normalizeSettings({
+      executionNotePath: ".obsidian/app.json",
+      taskSourcePath: "../Tasks.md",
+      logPath: "Reports/Focus Log.md",
+    });
+
+    expect(normalized.executionNotePath).toBe(DEFAULT_SETTINGS.executionNotePath);
+    expect(normalized.taskSourcePath).toBe("");
+    expect(normalized.logPath).toBe("Reports/Focus Log.md");
+  });
 });

@@ -19,6 +19,13 @@ describe("completeTaskInSource", () => {
   it("throws when the selected id does not match a line", () => {
     expect(() => completeTaskInSource("- [ ] First", "Tasks.md:9", "2026-05-02")).toThrow("Task line not found");
   });
+
+  it("throws when the selected source line changed after render", () => {
+    const source = "- [ ] First\n- [ ] Second";
+
+    expect(() => completeTaskInSource(source, "Tasks.md:1", "2026-05-02", "- [ ] Original second"))
+      .toThrow("Task source changed; reload before completing.");
+  });
 });
 
 describe("addTaskToSource", () => {

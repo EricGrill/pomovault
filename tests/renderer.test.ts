@@ -47,6 +47,7 @@ describe("PomoVaultRenderer", () => {
       onStartTask: vi.fn(),
       onCompleteTask: vi.fn(),
       onAddTask: vi.fn(),
+      onStartTimer: vi.fn(),
       onPause: vi.fn(),
       onReset: vi.fn(),
       onOpenLink: vi.fn(),
@@ -60,6 +61,7 @@ describe("PomoVaultRenderer", () => {
         showPriorityBadges: true,
         showDates: true,
         showRecurringIndicator: true,
+        sessionsBeforeLongBreak: 4,
         nowWorkingHeading: "H2",
         nowWorkingCallout: "warning",
       },
@@ -79,6 +81,7 @@ describe("PomoVaultRenderer", () => {
       onStartTask,
       onCompleteTask,
       onAddTask: vi.fn(),
+      onStartTimer: vi.fn(),
       onPause: vi.fn(),
       onReset: vi.fn(),
       onOpenLink: vi.fn(),
@@ -92,6 +95,7 @@ describe("PomoVaultRenderer", () => {
         showPriorityBadges: true,
         showDates: true,
         showRecurringIndicator: true,
+        sessionsBeforeLongBreak: 4,
         nowWorkingHeading: "H2",
         nowWorkingCallout: "warning",
       },
@@ -101,6 +105,68 @@ describe("PomoVaultRenderer", () => {
     root.querySelector<HTMLButtonElement>("[data-action='complete-task']")?.click();
 
     expect(onStartTask).toHaveBeenCalledWith("Tasks.md:0");
-    expect(onCompleteTask).toHaveBeenCalledWith("Tasks.md:0");
+    expect(onCompleteTask).toHaveBeenCalledWith("Tasks.md:0", "- [ ] Draft proposal");
+  });
+
+  it("uses the configured long-break cadence in the timer label", () => {
+    const root = document.createElement("div");
+    const renderer = new PomoVaultRenderer({
+      onStartTask: vi.fn(),
+      onCompleteTask: vi.fn(),
+      onAddTask: vi.fn(),
+      onStartTimer: vi.fn(),
+      onPause: vi.fn(),
+      onReset: vi.fn(),
+      onOpenLink: vi.fn(),
+    });
+
+    renderer.render(root, {
+      timer: timerState({ completedWorkSessions: 1 }),
+      tasks: [],
+      today: "2026-05-02",
+      settings: {
+        showPriorityBadges: true,
+        showDates: true,
+        showRecurringIndicator: true,
+        sessionsBeforeLongBreak: 3,
+        nowWorkingHeading: "H2",
+        nowWorkingCallout: "warning",
+      },
+    });
+
+    expect(root.querySelector(".pomovault__mode")?.textContent).toContain("Session 2/3");
+  });
+
+  it("renders a neutral start control when the timer is stopped", () => {
+    const root = document.createElement("div");
+    const onStartTimer = vi.fn();
+    const renderer = new PomoVaultRenderer({
+      onStartTask: vi.fn(),
+      onCompleteTask: vi.fn(),
+      onAddTask: vi.fn(),
+      onStartTimer,
+      onPause: vi.fn(),
+      onReset: vi.fn(),
+      onOpenLink: vi.fn(),
+    });
+
+    renderer.render(root, {
+      timer: timerState({ mode: "short-break", remainingSeconds: 300 }),
+      tasks: [],
+      today: "2026-05-02",
+      settings: {
+        showPriorityBadges: true,
+        showDates: true,
+        showRecurringIndicator: true,
+        sessionsBeforeLongBreak: 4,
+        nowWorkingHeading: "H2",
+        nowWorkingCallout: "warning",
+      },
+    });
+
+    root.querySelector<HTMLButtonElement>("[data-action='start-timer']")?.click();
+
+    expect(root.querySelector("[data-action='pause']")).toBeNull();
+    expect(onStartTimer).toHaveBeenCalledOnce();
   });
 });

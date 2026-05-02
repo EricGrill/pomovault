@@ -4,6 +4,7 @@ export interface RendererSettings {
   showPriorityBadges: boolean;
   showDates: boolean;
   showRecurringIndicator: boolean;
+  sessionsBeforeLongBreak: number;
   nowWorkingHeading: "H1" | "H2" | "H3";
   nowWorkingCallout: "warning" | "info" | "tip" | "danger" | "success";
 }
@@ -17,8 +18,9 @@ export interface RenderState {
 
 export interface RendererActions {
   onStartTask(taskId: string): void;
-  onCompleteTask(taskId: string): void;
+  onCompleteTask(taskId: string, expectedOriginalLine: string): void;
   onAddTask(): void;
+  onStartTimer(): void;
   onPause(): void;
   onReset(): void;
   onOpenLink(linkText: string): void;
@@ -32,19 +34,19 @@ export class PomoVaultRenderer {
     root.classList.add("pomovault");
 
     root.append(
-      this.renderTimer(state.timer),
+      this.renderTimer(state.timer, state.settings.sessionsBeforeLongBreak),
       this.renderNowWorking(state),
       this.renderTaskList(state),
     );
   }
 
-  private renderTimer(timer: TimerState): HTMLElement {
+  private renderTimer(timer: TimerState, sessionsBeforeLongBreak: number): HTMLElement {
     const section = document.createElement("section");
     section.className = "pomovault__panel pomovault__timer-panel";
 
     const label = document.createElement("div");
     label.className = "pomovault__mode";
-    label.textContent = `${formatMode(timer.mode)} · Session ${timer.completedWorkSessions + 1}/4`;
+    label.textContent = `${formatMode(timer.mode)} · Session ${formatSessionProgress(timer, sessionsBeforeLongBreak)}`;
 
     const display = document.createElement("div");
     display.className = "pomovault__timer";
@@ -54,7 +56,9 @@ export class PomoVaultRenderer {
     const controls = document.createElement("div");
     controls.className = "pomovault__controls";
     controls.append(
-      button("Pause", "pause", () => this.actions.onPause()),
+      timer.running
+        ? button("Pause", "pause", () => this.actions.onPause())
+        : button(timer.sessionStartedAt === null ? "Start" : "Resume", "start-timer", () => this.actions.onStartTimer()),
       button("Reset", "reset", () => this.actions.onReset()),
     );
 
@@ -135,7 +139,7 @@ export class PomoVaultRenderer {
       row.append(due);
     }
 
-    row.append(button("✓ Done", "complete-task", () => this.actions.onCompleteTask(task.id)));
+    row.append(button("✓ Done", "complete-task", () => this.actions.onCompleteTask(task.id, task.originalLine)));
     return row;
   }
 }
@@ -184,4 +188,16 @@ function formatMode(mode: TimerState["mode"]): string {
   if (mode === "short-break") return "Short Break";
   if (mode === "long-break") return "Long Break";
   return "Work";
+}
+
+function formatSessionProgress(timer: TimerState, sessionsBeforeLongBreak: number): string {
+  const cycleLength = Math.max(1, sessionsBeforeLongBreak);
+  const completedInCycle = timer.completedWorkSessions % cycleLength;
+  const sessionNumber = timer.mode === "work"
+    ? completedInCycle + 1
+    : completedInCycle === 0
+      ? cycleLength
+      : completedInCycle;
+
+  return `${sessionNumber}/${cycleLength}`;
 }

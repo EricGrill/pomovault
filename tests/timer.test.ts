@@ -60,4 +60,30 @@ describe("PomoTimer", () => {
     expect(timer.state.completedWorkSessions).toBe(4);
     expect(timer.state.mode).toBe("long-break");
   });
+
+  it("can start the current break without attaching a task", () => {
+    const timer = new PomoTimer(durations, createInitialTimerState(durations));
+    timer.start(0, "task-1", "Draft proposal");
+    timer.tick(25 * 60 * 1000);
+
+    timer.start((25 * 60 * 1000) + 1000, null, null);
+
+    expect(timer.state.running).toBe(true);
+    expect(timer.state.mode).toBe("short-break");
+    expect(timer.state.activeTaskId).toBeNull();
+    expect(timer.state.activeTaskText).toBeNull();
+  });
+
+  it("reconfigures idle durations without rebuilding the plugin", () => {
+    const timer = new PomoTimer(durations, createInitialTimerState(durations));
+
+    timer.configure({
+      workSeconds: 10 * 60,
+      shortBreakSeconds: 2 * 60,
+      longBreakSeconds: 8 * 60,
+      sessionsBeforeLongBreak: 3,
+    });
+
+    expect(timer.state.remainingSeconds).toBe(10 * 60);
+  });
 });

@@ -23,18 +23,32 @@ export function createInitialTimerState(durations: TimerDurations): TimerState {
 
 export class PomoTimer {
   constructor(
-    private readonly durations: TimerDurations,
+    private durations: TimerDurations,
     public state: TimerState,
   ) {}
 
   start(now: number, taskId: string | null, taskText: string | null): void {
+    const hasTask = taskId !== null || taskText !== null;
+    const keepWorkTask = this.state.mode === "work";
+
     this.state = {
       ...this.state,
       running: true,
-      activeTaskId: taskId ?? this.state.activeTaskId,
-      activeTaskText: taskText ?? this.state.activeTaskText,
+      activeTaskId: hasTask ? taskId : keepWorkTask ? this.state.activeTaskId : null,
+      activeTaskText: hasTask ? taskText : keepWorkTask ? this.state.activeTaskText : null,
       sessionStartedAt: this.state.sessionStartedAt ?? now,
       lastTickAt: now,
+    };
+  }
+
+  configure(durations: TimerDurations): void {
+    this.durations = durations;
+
+    if (this.state.running || this.state.sessionStartedAt !== null) return;
+
+    this.state = {
+      ...this.state,
+      remainingSeconds: this.durationForMode(this.state.mode),
     };
   }
 
@@ -108,5 +122,11 @@ export class PomoTimer {
       sessionStartedAt: null,
       lastTickAt: null,
     };
+  }
+
+  private durationForMode(mode: SessionMode): number {
+    if (mode === "short-break") return this.durations.shortBreakSeconds;
+    if (mode === "long-break") return this.durations.longBreakSeconds;
+    return this.durations.workSeconds;
   }
 }

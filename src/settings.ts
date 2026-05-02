@@ -1,6 +1,7 @@
 import type { App, Plugin } from "obsidian";
 import { PluginSettingTab, Setting } from "obsidian";
 import { EXECUTION_NOTE, LOG_NOTE } from "./constants";
+import { normalizeMarkdownPathSetting } from "./path-policy";
 import type { PomoVaultSettings } from "./types";
 
 export const DEFAULT_SETTINGS: PomoVaultSettings = {
@@ -28,9 +29,18 @@ export function normalizeSettings(input: Partial<PomoVaultSettings> | null | und
 
   return {
     ...merged,
-    executionNotePath: merged.executionNotePath.trim() || DEFAULT_SETTINGS.executionNotePath,
-    taskSourcePath: merged.taskSourcePath.trim(),
-    logPath: merged.logPath.trim() || DEFAULT_SETTINGS.logPath,
+    executionNotePath: normalizeMarkdownPathSetting(merged.executionNotePath, {
+      fallback: DEFAULT_SETTINGS.executionNotePath,
+      label: "Execution note path",
+    }),
+    taskSourcePath: normalizeMarkdownPathSetting(merged.taskSourcePath, {
+      allowEmpty: true,
+      label: "Task source path",
+    }),
+    logPath: normalizeMarkdownPathSetting(merged.logPath, {
+      fallback: DEFAULT_SETTINGS.logPath,
+      label: "Log path",
+    }),
     workMinutes: positiveInteger(merged.workMinutes, DEFAULT_SETTINGS.workMinutes),
     shortBreakMinutes: positiveInteger(merged.shortBreakMinutes, DEFAULT_SETTINGS.shortBreakMinutes),
     longBreakMinutes: positiveInteger(merged.longBreakMinutes, DEFAULT_SETTINGS.longBreakMinutes),

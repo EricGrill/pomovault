@@ -1,13 +1,22 @@
 import { formatTaskLine } from "./task-parser";
 import type { AddTaskInput } from "./types";
 
-export function completeTaskInSource(source: string, taskId: string, completionDate: string): string {
+export function completeTaskInSource(
+  source: string,
+  taskId: string,
+  completionDate: string,
+  expectedOriginalLine?: string,
+): string {
   const lineNumber = parseLineNumber(taskId);
   const lines = source.split(/\r?\n/);
   const line = lines[lineNumber];
 
   if (line === undefined || !/^\s*- \[[ /]\]/.test(line)) {
     throw new Error(`Task line not found for ${taskId}`);
+  }
+
+  if (expectedOriginalLine !== undefined && line !== expectedOriginalLine) {
+    throw new Error("Task source changed; reload before completing.");
   }
 
   const completed = line

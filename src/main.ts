@@ -6,9 +6,11 @@ import {
   ensureMarkdownFile,
   overwriteFile,
   readFile,
+  readFileIfExists,
   todayLocalDate,
 } from "./obsidian-services";
 import { PomoVaultRenderer } from "./renderer";
+import { PomoVaultSetupModal } from "./setup-modal";
 import { DEFAULT_SETTINGS, normalizeSettings, PomoVaultSettingTab } from "./settings";
 import { parseTasks } from "./task-parser";
 import { getVisibleSortedTasks } from "./task-sorter";
@@ -45,6 +47,11 @@ export default class PomoVaultPlugin extends Plugin {
       callback: () => this.pauseTimer(),
     });
     this.addCommand({
+      id: "start-pomovault-timer",
+      name: "Start or resume PomoVault timer",
+      callback: () => void this.startTimer(),
+    });
+    this.addCommand({
       id: "reset-pomovault",
       name: "Reset PomoVault timer",
       callback: () => void this.resetTimer(),
@@ -56,7 +63,12 @@ export default class PomoVaultPlugin extends Plugin {
     if (firstRun) {
       this.app.workspace.onLayoutReady(() => {
         void this.openExecutionNote();
-        new Notice("PomoVault is ready. Set a task source file in settings to begin.");
+        new PomoVaultSetupModal(this.app, async (taskSourcePath) => {
+          this.settings.taskSourcePath = taskSourcePath;
+          await ensureMarkdownFile(this.app, taskSourcePath, "# Tasks\n\n");
+          await this.saveSettings();
+          new Notice(`PomoVault will read tasks from ${taskSourcePath}.`);
+        }).open();
       });
     }
   }
@@ -67,7 +79,9 @@ export default class PomoVaultPlugin extends Plugin {
 
   async saveSettings(): Promise<void> {
     this.settings = normalizeSettings(this.settings);
+    this.timer.configure(this.createDurations());
     await this.saveData(this.settings);
+    await this.rerenderAll();
   }
 
   private async renderPomoBlock(el: HTMLElement): Promise<void> {
@@ -75,8 +89,9 @@ export default class PomoVaultPlugin extends Plugin {
     const tasks = await this.loadVisibleTasks();
     const renderer = new PomoVaultRenderer({
       onStartTask: (taskId) => void this.startTask(taskId),
-      onCompleteTask: (taskId) => void this.completeTask(taskId),
+      onCompleteTask: (taskId, expectedOriginalLine) => void this.completeTask(taskId, expectedOriginalLine),
       onAddTask: () => this.openAddTaskModal(),
+      onStartTimer: () => void this.startTimer(),
       onPause: () => this.pauseTimer(),
       onReset: () => void this.resetTimer(),
       onOpenLink: (linkText) => {
@@ -116,6 +131,11 @@ export default class PomoVaultPlugin extends Plugin {
     await this.rerenderAll();
   }
 
+  private async startTimer(): Promise<void> {
+    this.timer.start(Date.now(), null, null);
+    await this.rerenderAll();
+  }
+
   private pauseTimer(): void {
     this.timer.pause(Date.now());
     void this.rerenderAll();
@@ -145,16 +165,20 @@ export default class PomoVaultPlugin extends Plugin {
     await this.rerenderAll();
   }
 
-  private async completeTask(taskId: string): Promise<void> {
+  private async completeTask(taskId: string, expectedOriginalLine: string): Promise<void> {
     if (!this.settings.taskSourcePath) {
       new Notice("Set a task source file in PomoVault settings first.");
       return;
     }
 
-    const source = await readFile(this.app, this.settings.taskSourcePath);
-    const updated = completeTaskInSource(source, taskId, todayLocalDate());
-    await overwriteFile(this.app, this.settings.taskSourcePath, updated);
-    await this.rerenderAll();
+    try {
+      const source = await readFile(this.app, this.settings.taskSourcePath);
+      const updated = completeTaskInSource(source, taskId, todayLocalDate(), expectedOriginalLine);
+      await overwriteFile(this.app, this.settings.taskSourcePath, updated, { createIfMissing: false });
+      await this.rerenderAll();
+    } catch (error) {
+      new Notice(error instanceof Error ? error.message : "Unable to complete task.");
+    }
   }
 
   private openAddTaskModal(): void {
@@ -167,13 +191,17 @@ export default class PomoVaultPlugin extends Plugin {
   }
 
   private async addTask(input: AddTaskInput): Promise<void> {
-    const source = await readFile(this.app, this.settings.taskSourcePath).catch(() => "");
-    await overwriteFile(this.app, this.settings.taskSourcePath, addTaskToSource(source, input));
-    await this.rerenderAll();
+    try {
+      const source = await readFile(this.app, this.settings.taskSourcePath);
+      await overwriteFile(this.app, this.settings.taskSourcePath, addTaskToSource(source, input), { createIfMissing: false });
+      await this.rerenderAll();
+    } catch (error) {
+      new Notice(error instanceof Error ? error.message : "Unable to add task.");
+    }
   }
 
   private async appendLedgerForEvent(outcome: LedgerEntry["outcome"], event: TimerCompletionEvent): Promise<void> {
-    const source = await readFile(this.app, this.settings.logPath).catch(() => "");
+    const source = await readFileIfExists(this.app, this.settings.logPath);
     const entry: LedgerEntry = {
       date: todayLocalDate(new Date(event.endedAt)),
       startTime: formatTime(event.startedAt),
@@ -183,7 +211,9 @@ export default class PomoVaultPlugin extends Plugin {
       outcome,
       taskText: event.completedMode === "work" ? event.activeTaskText : null,
     };
-    await overwriteFile(this.app, this.settings.logPath, appendLedgerEntry(source, entry));
+    await overwriteFile(this.app, this.settings.logPath, appendLedgerEntry(source ?? "", entry), {
+      createIfMissing: source == null,
+    });
   }
 
   private async openExecutionNote(): Promise<void> {
@@ -220,6 +250,9 @@ export default class PomoVaultPlugin extends Plugin {
     oscillator.frequency.value = 880;
     oscillator.connect(gain);
     gain.connect(context.destination);
+    oscillator.onended = () => {
+      void context.close();
+    };
     oscillator.start();
     oscillator.stop(context.currentTime + 0.2);
   }

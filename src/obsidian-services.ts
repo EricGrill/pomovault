@@ -1,6 +1,7 @@
 import type { App } from "obsidian";
-import { normalizePath, TFile } from "obsidian";
+import { TFile } from "obsidian";
 import { EXECUTION_NOTE, TASK_BLOCK_LANGUAGE } from "./constants";
+import { validateMarkdownPath } from "./path-policy";
 
 export function createExecutionNoteContent(): string {
   return [
@@ -20,7 +21,7 @@ export function todayLocalDate(now = new Date()): string {
 }
 
 export async function ensureMarkdownFile(app: App, path: string, content: string): Promise<TFile> {
-  const normalized = normalizePath(path || EXECUTION_NOTE);
+  const normalized = validateMarkdownPath(path || EXECUTION_NOTE, { label: "Markdown path" });
   const existing = app.vault.getAbstractFileByPath(normalized);
   if (existing instanceof TFile) {
     return existing;
@@ -29,17 +30,36 @@ export async function ensureMarkdownFile(app: App, path: string, content: string
 }
 
 export async function readFile(app: App, path: string): Promise<string> {
-  const file = app.vault.getAbstractFileByPath(normalizePath(path));
+  const normalized = validateMarkdownPath(path, { label: "Markdown path" });
+  const file = app.vault.getAbstractFileByPath(normalized);
   if (!(file instanceof TFile)) {
     throw new Error(`File not found: ${path}`);
   }
   return app.vault.read(file);
 }
 
-export async function overwriteFile(app: App, path: string, source: string): Promise<void> {
-  const normalized = normalizePath(path);
+export async function readFileIfExists(app: App, path: string): Promise<string | null> {
+  const normalized = validateMarkdownPath(path, { label: "Markdown path" });
+  const file = app.vault.getAbstractFileByPath(normalized);
+  if (file == null) return null;
+  if (!(file instanceof TFile)) {
+    throw new Error(`Path is not a markdown file: ${path}`);
+  }
+  return app.vault.read(file);
+}
+
+export async function overwriteFile(
+  app: App,
+  path: string,
+  source: string,
+  options: { createIfMissing?: boolean } = {},
+): Promise<void> {
+  const normalized = validateMarkdownPath(path, { label: "Markdown path" });
   const file = app.vault.getAbstractFileByPath(normalized);
   if (!(file instanceof TFile)) {
+    if (options.createIfMissing === false) {
+      throw new Error(`File not found: ${path}`);
+    }
     await app.vault.create(normalized, source);
     return;
   }

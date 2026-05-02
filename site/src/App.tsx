@@ -4,11 +4,11 @@ export function App() {
   return (
     <main className="min-h-screen bg-terminal text-zinc-100">
       <header className="sticky top-0 z-20 border-b border-cyan/20 bg-terminal/90 px-6 py-5 backdrop-blur">
-        <nav className="mx-auto flex max-w-6xl items-center justify-between font-mono">
+        <nav className="mx-auto flex max-w-6xl flex-col gap-4 font-mono md:flex-row md:items-center md:justify-between">
           <a className="text-xl font-bold text-zinc-100" href="/">
             <span className="text-cyan">&gt;</span> PomoVault
           </a>
-          <div className="hidden gap-6 text-sm uppercase text-muted md:flex">
+          <div className="flex gap-4 overflow-x-auto whitespace-nowrap text-xs uppercase text-muted md:gap-6 md:text-sm">
             {siteContent.nav.map((item) => (
               <a key={item} className="hover:text-cyan" href={`#${item.toLowerCase()}`}>
                 {item}
@@ -18,7 +18,7 @@ export function App() {
         </nav>
       </header>
 
-      <section className="mx-auto grid max-w-6xl gap-10 px-6 py-16 md:grid-cols-[1.08fr_0.92fr] md:py-24">
+      <section className="mx-auto grid max-w-6xl gap-10 px-6 py-14 md:grid-cols-[0.92fr_1.08fr] md:py-20">
         <div>
           <p className="font-mono text-sm text-green">// focus_protocol</p>
           <h1 className="mt-4 font-mono text-5xl font-bold md:text-7xl">{siteContent.headline}</h1>
@@ -39,18 +39,29 @@ export function App() {
           </div>
         </div>
 
-        <div className="border border-cyan/30 bg-card p-5 font-mono shadow-cyan">
-          <p className="text-sm text-cyan">$ pomo start</p>
-          <div className="mt-4 space-y-3">
-            {siteContent.proofLines.map((line) => (
-              <div key={line} className="border border-zinc-800 bg-terminal p-3 text-sm text-zinc-300">
-                {line}
-              </div>
+        <figure className="font-mono">
+          <img
+            className="w-full border border-cyan/30 bg-card shadow-cyan"
+            src={siteContent.proofScreens[0].src}
+            alt="PomoVault Obsidian note with timer, now-working task, and task list"
+          />
+          <figcaption className="mt-3 text-sm text-muted">{siteContent.proofScreens[0].caption}</figcaption>
+        </figure>
+      </section>
+
+      <section className="border-y border-zinc-800 bg-panel px-6 py-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-mono text-sm text-cyan">// proof_in_the_vault</p>
+          <div className="mt-6 grid gap-5 md:grid-cols-3">
+            {siteContent.proofScreens.map((screen) => (
+              <figure key={screen.title} className="border border-zinc-800 bg-card p-3">
+                <img className="w-full border border-zinc-900 bg-terminal" src={screen.src} alt={`${screen.title} proof surface`} />
+                <figcaption className="p-2">
+                  <h2 className="font-mono text-lg text-zinc-100">{screen.title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">{screen.caption}</p>
+                </figcaption>
+              </figure>
             ))}
-          </div>
-          <div className="mt-5 border-t border-zinc-800 pt-5">
-            <div className="text-5xl font-bold text-cyan">25:00</div>
-            <div className="mt-2 text-sm uppercase text-muted">Work · Session 1/4</div>
           </div>
         </div>
       </section>
