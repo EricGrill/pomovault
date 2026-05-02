@@ -39,13 +39,9 @@ export function App() {
           </div>
         </div>
 
-        <figure className="font-mono">
-          <img
-            className="w-full border border-cyan/30 bg-card shadow-cyan"
-            src={siteContent.proofScreens[0].src}
-            alt="PomoVault Obsidian note with timer, now-working task, and task list"
-          />
-          <figcaption className="mt-3 text-sm text-muted">{siteContent.proofScreens[0].caption}</figcaption>
+        <figure>
+          <ProductPanel featured />
+          <figcaption className="mt-3 font-mono text-sm text-muted">{siteContent.proofSurfaces[0].caption}</figcaption>
         </figure>
       </section>
 
@@ -53,12 +49,16 @@ export function App() {
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-sm text-cyan">// proof_in_the_vault</p>
           <div className="mt-6 grid gap-5 md:grid-cols-3">
-            {siteContent.proofScreens.map((screen) => (
-              <figure key={screen.title} className="border border-zinc-800 bg-card p-3">
-                <img className="w-full border border-zinc-900 bg-terminal" src={screen.src} alt={`${screen.title} proof surface`} />
+            {siteContent.proofSurfaces.map((surface) => (
+              <figure key={surface.title} className="border border-zinc-800 bg-card p-4">
+                {surface.kind === "panel" ? (
+                  <ProductPanel />
+                ) : (
+                  <VaultSnippet lines={surface.lines} tone={surface.kind} />
+                )}
                 <figcaption className="p-2">
-                  <h2 className="font-mono text-lg text-zinc-100">{screen.title}</h2>
-                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">{screen.caption}</p>
+                  <h2 className="font-mono text-lg text-zinc-100">{surface.title}</h2>
+                  <p className="mt-2 text-sm leading-relaxed text-zinc-400">{surface.caption}</p>
                 </figcaption>
               </figure>
             ))}
@@ -110,5 +110,59 @@ export function App() {
         </div>
       </footer>
     </main>
+  );
+}
+
+function ProductPanel({ featured = false }: { featured?: boolean }) {
+  return (
+    <div className={`border border-cyan/30 bg-card font-mono shadow-cyan ${featured ? "p-4 sm:p-5" : "p-3"}`}>
+      <div className="flex items-center justify-between border-b border-zinc-800 pb-3 text-sm">
+        <span className="text-cyan">PomoVault.md</span>
+        <span className="text-muted">plain markdown</span>
+      </div>
+      <div className="mt-4 border border-cyan/30 bg-terminal p-4">
+        <p className="text-xs uppercase text-muted">Work · Session 1/4</p>
+        <div className={`${featured ? "text-6xl sm:text-7xl" : "text-5xl"} mt-3 font-bold leading-none text-cyan`}>
+          25:00
+        </div>
+        <div className="mt-4 flex gap-2 text-xs uppercase">
+          <span className="border border-zinc-700 px-3 py-2 text-zinc-200">Pause</span>
+          <span className="border border-zinc-700 px-3 py-2 text-zinc-200">Reset</span>
+        </div>
+      </div>
+      <div className="mt-3 border border-yellow-500/30 bg-yellow-950/20 p-4">
+        <p className="text-xs uppercase text-yellow-300">Now working on</p>
+        <p className="mt-2 text-base text-zinc-100">Draft launch post</p>
+      </div>
+      <div className="mt-3 border border-zinc-800 bg-terminal p-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg text-zinc-100">Tasks</h3>
+          <span className="border border-cyan px-2 py-1 text-xs text-cyan">+ Add Task</span>
+        </div>
+        <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-zinc-800 pt-3 text-sm">
+          <span className="border border-zinc-700 px-2 py-1 text-zinc-200">Start</span>
+          <span className="rounded-full border border-magenta px-2 py-1 text-xs text-magenta">HIGH</span>
+          <span className="min-w-0 flex-1 basis-40 text-zinc-100">Draft launch post</span>
+          <span className="text-muted">2026-05-04</span>
+          <span className="border border-zinc-700 px-2 py-1 text-zinc-200">Done</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VaultSnippet({ lines, tone }: { lines?: string[]; tone: string }) {
+  return (
+    <div className="min-h-80 border border-zinc-800 bg-terminal p-4 font-mono text-sm leading-7 text-zinc-200 sm:text-base">
+      <div className="mb-4 flex items-center justify-between border-b border-zinc-800 pb-3 text-xs uppercase">
+        <span className={tone === "ledger" ? "text-green" : "text-cyan"}>{tone === "ledger" ? "session ledger" : "task source"}</span>
+        <span className="text-muted">.md</span>
+      </div>
+      {(lines ?? []).map((line) => (
+        <p key={line} className={line.startsWith("#") ? "text-green" : "break-words text-zinc-200"}>
+          {line}
+        </p>
+      ))}
+    </div>
   );
 }
