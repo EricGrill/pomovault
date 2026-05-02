@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "ESNext",
+    "target": "ES2022",
+    "allowJs": false,
+    "noImplicitAny": true,
+    "moduleResolution": "Bundler",
+    "importHelpers": true,
+    "isolatedModules": true,
+    "strict": true,
+    "lib": [
+      "DOM",
+      "ES2022"
+    ],
+    "types": [
+      "node",
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "esbuild.config.mjs"
+  ]
+}
