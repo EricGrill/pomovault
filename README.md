@@ -10,6 +10,8 @@ PomoVault is an Obsidian plugin that eliminates the friction between task manage
 
 **One plugin. One note. Zero friction.**
 
+Release notes: [CHANGELOG.md](CHANGELOG.md).
+
 ---
 
 ## ✨ Features
@@ -21,9 +23,23 @@ PomoVault is an Obsidian plugin that eliminates the friction between task manage
 - ✅ **One-click completion** — Mark tasks done inline; updates your source file instantly
 - 📝 **Plain markdown logs** — Session history written to `PomoVault Log.md` — no lock-in, ever
 - 🔗 **Wikilink support** — `[[Internal Links]]` in tasks render and work normally
-- 🔁 **Recurring task markers** — Displays repeating-task metadata; automatic next-occurrence creation is planned for a later release
+- 🔁 **Recurring task markers** — Parses and shows `🔁` recurrence text (display/metadata only). Completing a task does **not** create the next occurrence; that behavior is planned for a later release
 - 🔇 **Zero dependencies** — No Tasks plugin, no Dataview, no other timer plugin required
 - 📱 **Not desktop-only** — Built with responsive Obsidian UI primitives; validate your theme on mobile before relying on it daily
+
+---
+
+## 📸 Screenshots
+
+The files below are **placeholder diagrams** (not real Obsidian captures). **Maintainers:** replace [`docs/images/pomovault-execution-note-PLACEHOLDER.png`](docs/images/pomovault-execution-note-PLACEHOLDER.png) and [`docs/images/pomovault-session-log-PLACEHOLDER.png`](docs/images/pomovault-session-log-PLACEHOLDER.png) with PNG exports from a vault using PomoVault, then rename/remove the `PLACEHOLDER` suffix and update the paths in this section if needed.
+
+**Execution note** (`PomoVault.md`) — timer, NOW WORKING ON, and task list:
+
+![PomoVault execution note (placeholder layout)](docs/images/pomovault-execution-note-PLACEHOLDER.png)
+
+**Session log** (`PomoVault Log.md`) — work history in plain markdown:
+
+![PomoVault session log (placeholder layout)](docs/images/pomovault-session-log-PLACEHOLDER.png)
 
 ---
 
@@ -61,6 +77,12 @@ PomoVault reads standard markdown task syntax, compatible with (but not requirin
 | ⏬ | Lowest priority |
 | 🔁 | Recurring |
 | ✅ | Completion date |
+
+### Recurring tasks
+
+PomoVault reads the **🔁** marker and the human-readable phrase that follows (for example `every week`), shows a ↺ indicator in the task list when that option is enabled, and **keeps that text on the line** when you add tasks or mark them done (only the checkbox and completion date change). It does **not** interpret recurrence rules, roll dates forward, or insert a new task line when you complete a recurring item.
+
+For full recurrence syntax and rule options (including `when done`), see the [Obsidian Tasks recurring tasks guide](https://publish.obsidian.md/tasks/Getting+Started/Recurring+Tasks). PomoVault stays compatible with that markdown shape; use the Tasks plugin if you need automatic next-occurrence generation today.
 
 ---
 

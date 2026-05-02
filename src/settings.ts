@@ -75,7 +75,11 @@ export class PomoVaultSettingTab extends PluginSettingTab {
     this.toggleSetting("Log breaks", "logBreaks");
     this.toggleSetting("Show priority badges", "showPriorityBadges");
     this.toggleSetting("Show dates", "showDates");
-    this.toggleSetting("Show recurring indicator", "showRecurringIndicator");
+    this.toggleSetting(
+      "Show recurring indicator",
+      "showRecurringIndicator",
+      "Shows ↺ when the task line includes 🔁; completing a task does not create the next recurring instance (planned for a later release).",
+    );
   }
 
   private textSetting(name: string, placeholder: string, key: "taskSourcePath" | "logPath"): void {
@@ -109,15 +113,16 @@ export class PomoVaultSettingTab extends PluginSettingTab {
   private toggleSetting(
     name: string,
     key: "autoAdvance" | "soundOnCompletion" | "logBreaks" | "showPriorityBadges" | "showDates" | "showRecurringIndicator",
+    description?: string,
   ): void {
-    new Setting(this.containerEl)
-      .setName(name)
-      .addToggle((toggle) => toggle
-        .setValue(this.host.settings[key])
-        .onChange(async (value) => {
-          this.host.settings[key] = value;
-          await this.host.saveSettings();
-        }));
+    const row = new Setting(this.containerEl).setName(name);
+    if (description) row.setDesc(description);
+    row.addToggle((toggle) => toggle
+      .setValue(this.host.settings[key])
+      .onChange(async (value) => {
+        this.host.settings[key] = value;
+        await this.host.saveSettings();
+      }));
   }
 }
 

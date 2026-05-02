@@ -52,12 +52,15 @@ export class PomoVaultTaskModal extends Modal {
       });
     });
 
-    new Setting(contentEl).setName("Recurring").addText((text) => {
-      text.setPlaceholder("every week");
-      text.onChange((value) => {
-        this.recurring = value.trim() || null;
+    new Setting(contentEl)
+      .setName("Recurring")
+      .setDesc("Optional 🔁 phrase (e.g. every week). PomoVault stores it only; it does not spawn the next occurrence when you complete the task.")
+      .addText((text) => {
+        text.setPlaceholder("every week");
+        text.onChange((value) => {
+          this.recurring = value.trim() || null;
+        });
       });
-    });
 
     new Setting(contentEl).addButton((button) => {
       button.setButtonText("Save task").setCta().onClick(async () => {
