@@ -1,0 +1,21 @@
+.DS_Store
+
+# Local agent/runtime state
+.omx/
+.superpowers/
+
+# JavaScript/TypeScript
+node_modules/
+dist/
+build/
+coverage/
+
+# Obsidian plugin build output
+/plugin/*.js
+/plugin/*.map
+/plugin/styles.css
+
+# Environment
+.env
+.env.*
+!.env.example
